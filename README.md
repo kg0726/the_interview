@@ -4,7 +4,7 @@
 
 🏆 **삼성 SSAFY 14기 프로젝트 우수상** | 5인 팀 | 2026.02 ~ 03
 
-📄 **[기술 설계 포트폴리오 보기](https://www.notion.so/PROJECT_PORTFOLIO-3370380ca5bd80429e39dd223b7d99d2)**
+📄 **[상세 포트폴리오](https://www.notion.so/PROJECT_PORTFOLIO-3370380ca5bd80429e39dd223b7d99d2)**
 
 ---
 
@@ -48,7 +48,7 @@ AI 서버 호출은 수 초가 걸리는 네트워크 I/O입니다.
 **해결 : Facade 패턴으로 트랜잭션 경계 분리**
 
 별도의 `InterviewFacade` 클래스를 두어 AI 호출 구간을 트랜잭션 밖으로 분리했습니다.
-Facade는 트랜잭션 없이 오케스트레이션만 담당하고, Service의 각 메서드가 짧은 트랜잭션 단위로 호출됩니다.
+Facade는 트랜잭션 없이 메서드 호출 흐름의 제어만 담당하고, Service의 각 메서드가 짧은 트랜잭션 단위로 호출됩니다.
 
 ```
 InterviewFacade (트랜잭션 없음)
