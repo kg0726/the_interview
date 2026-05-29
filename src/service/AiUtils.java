@@ -46,15 +46,11 @@ import reactor.util.retry.Retry;
  *  2. 4xx/5xx 를 onStatus 로 분기 처리한다.
  *     - 4xx: IllegalArgumentException 으로 던져서 retryWhen 의 .filter 에서 재시도 제외
  *     - 5xx: GeneralException 으로 정상 재시도 흐름에 태움
- *     이렇게 하면 멱등성이 보장되지 않는 4xx 요청을 무의미하게 다시 보내는 비용을 피할 수 있다.
  *
- *  3. RAG 호출은 fixed delay 재시도 정책을 공유 (getRagRetrySpec).
  *
- *  ※ V1 의 .block() 동기 메서드 (callFastApiForNextQuestion / callFastApiForInterviewTitle /
- *    callFastApiForNextOpening) 는 V2 가 출현하면서 사용 빈도가 크게 줄었으므로 발췌에서 제외.
- *  ※ callFastApiForRagReindex 는 callFastApiForRagUpsert 와 거의 동일한 패턴이므로 한 개만 노출.
  * ===========================================================================
  */
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -113,7 +109,7 @@ public class AiUtils {
      * 청크 STT 가 완료된 시점에 호출되는 메인 파이프라인.
      * <p>
      * V1 의 동기 동명 메서드는 .block() 으로 톰캣 스레드를 점유했으나, 이 V2 는 Mono 를 반환해
-     * Facade 의 reactive 체인에 그대로 합성된다. 결과적으로 톰캣 워커 스레드를 한 번도
+     * Facade 의 reactive 체인에 그대로 합성된다. 결과적으로 톰캣 스레드를 한 번도
      * 블로킹하지 않고 AI 응답을 기다릴 수 있게 된다.
      */
     public Mono<AiPipelineResponse> callFastApiForNextQuestionV2(
