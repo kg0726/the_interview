@@ -51,15 +51,13 @@ import reactor.core.publisher.Mono;
  *
  *  설계 원칙
  *  ----------------------------------------------------------------------
- *  - 한 메서드 안에서 절대 외부 네트워크(AI 호출, RAG 호출 등) 를 직접 부르지 않는다.
+ *  - 한 트랜잭션 안에서 절대 외부 네트워크(AI 호출, RAG 호출 등) 를 직접 부르지 않는다.
  *    AI 호출은 항상 Facade 쪽에서, 트랜잭션 밖에서 실행된다.
  *  - 각 @Transactional 메서드는 짧게 끝난다 → DB 커넥션 점유 시간을 최소화.
  *  - 비동기 STT 응답이 도착 순서와 무관하게 합쳐지도록 Redis Sorted Set 을 활용한다.
- *  - "정제 답변(refined-answer)" 과 "꼬리질문 응답"이 거의 동시에 도착하는 race 상황을
- *    Redis 임시 저장 + DB merge 패턴으로 해결한다.
+ *  - "답변"과 "꼬리질문 응답"이 거의 동시에 도착하는 race 상황을
+ *    Redis 임시 저장 + DB 저장 패턴으로 해결한다.
  *
- *  ※ CRUD 류(get*, delete*, share, bookmark, postit, explore) 메서드는 면접 포인트와
- *    무관하여 발췌에서 제외. 약 1300줄 중 핵심만 남김.
  * ===========================================================================
  */
 @Service
@@ -466,7 +464,7 @@ public class InterviewService {
     }
 
     // ===========================================================================
-    //  생략된 메서드들 (포트폴리오 핵심 포인트와 무관하므로 발췌에서 제외)
+    //  생략된 메서드들
     //
     //   - exitInterview (V1 동기 종료) — V2/V3 facade.exitInterviewFacade 로 대체됨
     //   - getInterviewHistoryList / getInterviewHistoryDetail / getSharedInterviewDetail
