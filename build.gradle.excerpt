@@ -1,0 +1,39 @@
+// 원본 build.gradle 에서 발췌 — 핵심 코드 모듈에서 사용한 의존성만 추림
+// (실제 프로젝트에는 OAuth2 / DevTools / 테스트 스타터 등이 추가로 포함됨)
+
+plugins {
+    id 'org.springframework.boot' version '4.0.3'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+dependencies {
+    // ── Web / WebSocket / WebFlux ────────────────────────────────────────────
+    // Spring MVC + WebSocket(STOMP) + 비동기 WebClient(Reactor) 동시 사용
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // ── 영속성 ───────────────────────────────────────────────────────────────
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.postgresql:postgresql'
+
+    // ── Redis ─ Sorted Set / SETNX / TTL Lock 의 토대 ────────────────────────
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // ── 보안 ─ STOMP CONNECT 프레임에서 JWT 검증 (StompHandler) ────────────
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
+
+    // ── Lombok ───────────────────────────────────────────────────────────────
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}
