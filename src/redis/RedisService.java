@@ -10,21 +10,6 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
-/*
- * ===========================================================================
- *  Redis 핵심 추상화 — 인터뷰 파이프라인의 동시성/순서 보장 토대
- * ===========================================================================
- *  - addChunkToSortedSet / getOrderedChunks
- *      : WebClient 비동기 STT 응답이 도착 순서와 무관하게 항상 발화 순서대로
- *        조립되도록 ZSet(score=청크 인덱스) 사용
- *  - setIfAbsent
- *      : SETNX 원자적 명령. 마지막 STT 청크와 /next totalChunks가 거의 동시에
- *        도착할 때 파이프라인이 정확히 1번만 트리거되도록 보장
- *  - setValues(... Duration)
- *      : Redis TTL을 활용한 분산 락. 서버 비정상 종료에도 자동 해제되어
- *        DB 상태 컬럼 락이 안고 있던 "영구 잠금" 문제를 해소
- * ===========================================================================
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
